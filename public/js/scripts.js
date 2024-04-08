@@ -1,50 +1,73 @@
-const cardList = [
-    {
-        title: 'Basics of HTML', image: 'images/Image-html.jpeg', link: 'All About HTML', description: 'HTML'
-    },
+const clickMe = () => {
+    alert("Clicked!")
+}
 
-    {
-        title: 'Advanced CSS', image: 'images/Image-css.jpeg', link: 'All About CSS', description: 'CSS'
-    }
-];
+const getProjects = () => {
+    $.get('/api/projects',(response) => {
+        if(response.statusCode==200){
+            console.log(response)
+            addCards(response.data);
+        }
+        else {
+            console.log(response)
+        }
+    })
+}
 
-const loginButton = () => {
-    console.log('loginButton clicked');
+
+const addCard = (project) => {
+    console.log("asdfgh", p)
+    $.ajax({
+        url: '/api/projects',
+        data: project,
+        type: 'POST',
+        success: (result) => {
+            alert(result.message);
+            location.reload();
+        }
+    })
 }
 
 const addCards = (items) => {
-    console.log(items);
-    items.forEach(item => {
-        let itemToAppend = '<div class="col s4 center-align"> <div class="card medium"><div class="card-image waves-effect waves-block waves-light"><img class="activator" src="'+ item.image +'"></img></div><div class="card-content"><span class="card-title activator grey-text text-darken-4">'+ item.title +'<i class="material-icons right">more_vert</i></span><p><a href="#">View More About This Course</a></p></div><div class="card-reveal"><span class="card-title grey-text text-darken-4">'+item.title+'<i class="material-icons right">close</i></span><p class="card-text">'+item.description+'</p></div></div></div>';
-        $('#card-section').append(itemToAppend);
+    items.forEach((item) => {
+        let itemToAppend =
+            '<div class="col s4 center-align">' +
+            '<div class="card medium"><div class="card-image waves-effect waves-block waves-light"><img id="cardImg" class="activator" src="' +
+            item.path +
+            '">' +
+            '</div><div class="card-content">' +
+            '<span class="card-title activator grey-text text-darken-4">' +
+            item.title +
+            '<i class="material-icons right">more_vert</i></span><p><a href="#">' +
+            "</a></p></div>" +
+            '<div class="card-reveal">' +
+            '<span class="card-title grey-text text-darken-4">' +
+            item.subTitle +
+            '<i class="material-icons right">close</i></span>' +
+            '<p class="card-text">' +
+            item.description +
+            "</p>" +
+            "</div></div></div>";
+        $("#card-section").append(itemToAppend);
     });
-}
-
+};
 
 const submitForm = () => {
     let formData = {};
-    formData.first_name = $('#first_name').val();
-    formData.last_name = $('#last_name').val();
-    formData.email = $('#email').val();
-    formData.password = $('#password').val();
+    formData.title = $('#title').val();
+    formData.subTitle = $('#subTitle').val();
+    formData.path = $('#path').val();
+    formData.description = $('#description').val();
 
-    // Validate email format for the form
-    const emailFormat = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailFormat.test(formData.email)) {
-        M.toast({ html: 'Please enter email in valid format, username@example.com', classes: 'red' });
-        return; 
-    }
-
-    console.log('form data: ', formData);
+    console.log(formData);
+    addCard(formData);
 }
 
-
-$(document).ready(function(){
+$(document).ready(function () {
     $('.materialboxed').materialbox();
-    $('.modal').modal();
-
-    addCards(cardList);
-    $('#formSubmit').click(()=>{
+    $('#formSubmit').click(() => {
         submitForm();
-    })
+    });
+    getProjects();
+    $('.modal').modal();
 });
