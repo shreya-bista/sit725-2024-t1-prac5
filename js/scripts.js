@@ -3,8 +3,8 @@ const clickMe = () => {
 }
 
 const getProjects = () => {
-    $.get('/api/projects',(response) => {
-        if(response.statusCode==200){
+    $.get('/api/projects', (response) => {
+        if (response.statusCode == 200) {
             console.log(response)
             addCards(response.data);
         }
@@ -16,7 +16,6 @@ const getProjects = () => {
 
 
 const addCard = (project) => {
-    console.log("asdfgh", p)
     $.ajax({
         url: '/api/projects',
         data: project,
